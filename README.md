@@ -14,7 +14,7 @@ Asagidaki sayfadan extreleri pdf olarak yukleyip hesaplama yapabilirsiniz. sonuc
 - 2023 yili icinde yapilan butun satis islemleri adetlerinin alis tarihlerini iceren hesap ekstreleri(PDF) de eklenmelidir. 
 - Islem bittiginde indirilecek Excel dosyasini actiginiz zaman en son kolon'da satis islemine karsilik gelen alis tarihi ve adetleri dikkate alinarak olusturulan vergiye tabi kazanci gorebilirsiniz. 
 - Her ne kadar PDF kaydetme islemi yapilmiyor olsa da guvenliginiz icin PDF icindeki ozel bilgileri silmenin bir yolunu bulmanizda fayda var. Ben henuz bir yol bulamadim. 
--  **<ins>Hisse bolunmesi veya birlesmesi(split/reverse split) islemleri uzerinde calisiyorum. Ama ETF'ler icin listeyi bulamadim maalesef. Sonucta ortaya cikan Excel dosyasi uzerinde bunlari manuel olarak duzeltebilirsiniz</ins>**
+-  **<ins>Hisse bolunmesi veya birlesmesi(split/reverse split) islemleri yeni eklendi. Ama ETF'ler icin listeyi bulamadim maalesef. Sonucta ortaya cikan Excel dosyasi uzerinde bunlari manuel olarak duzeltebilirsiniz</ins>**
 - Hata bildirimi veya bilgi vs destek amaci ile hojuabi@gmail.com adresine yazabilirsiniz.
 
 ## Lokal calistirma
