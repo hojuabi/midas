@@ -4,7 +4,7 @@ Bu uygulamanin kurumsal olarak Midas ile herhangi bir iliskisi yoktur.
 
 ## Web uzerinden hesaplama
 
-Asagidaki sayfadan extreleri pdf olarak yukleyip hesaplama yapabilirsiniz. sonuc olarak bir excel dosyasi indiriyor olacaksiniz.
+Asagidaki sayfadan extreleri pdf olarak yukleyip hesaplama yapabilirsiniz. sonuc olarak bir excel dosyasi indiriyor olacaksiniz. Excel dosyasindaki son kolon islem basi ufe vs hesaplanarak vegiye tabi kazanci gosterecektir. 
 
 [Midas Vergi Hesaplama ](http://hojuabi.polandcentral.cloudapp.azure.com:8000)
 
