@@ -54,6 +54,13 @@ class Midas:
             dollar = self.dollar_df.loc[index,'currency']
 
         return dollar
+    def get_split_ratio(self,symbol, buy_date, sell_date ):
+        split_row = self.splits_df[self.splits_df['Symbol'] == symbol]
+        if not split_row.empty:
+            split = split_row.iloc[0].to_dict()
+            if split['Date'] > buy_date and split['Date'] < sell_date:
+                return split['Split Ratio']
+        return 1
     def get_dollar_history(self):
         excel_file = 'EVDS.xlsx'  # Replace 'example.xlsx' with the path to your Excel file
         df = pd.read_excel(excel_file)
@@ -65,7 +72,22 @@ class Midas:
         df = df.drop(df.columns[2],axis=1)
 
         return df
+    def get_splits_history(self):
+        split_file = 'split_2023.json'  # Replace 'example.xlsx' with the path to your Excel file
+        df = pd.read_json(split_file)
+        test_row = {
+            "Date" : "2023-12-01  00:00:00",
+            "Symbol" : "TMF",
+            "Company Name": "Test Company",
+            "Type" : "Reverse",
+            "Split Ratio" : 0.1
+        }
+        print(f"df length {len(df)}")
+        df.loc[len(df)] = test_row
+        df['Date']=pd.to_datetime(df['Date'],format='%Y-%m-%d %H:%M:%S')
+        df['Split Ratio'] = df['Split Ratio'].astype(float)
 
+        return df
     def get_ufe_history(self):
         #GET UFE history to a dataframe 
         #still have issue to resolve read write to json 
@@ -115,6 +137,9 @@ class Midas:
 
         self.ufe_df = self.get_ufe_history()
         print(self.ufe_df)
+
+        self.splits_df = self.get_splits_history()
+        print(self.splits_df)
 
         ops['previous_month']= ops['Tarih'] - pd.DateOffset(months=1)
         # Extract year and month as strings from the previous month
@@ -167,17 +192,20 @@ class Midas:
                 for ind in buy_ops_symbol.index:
                     remained_buy=buy_ops_symbol['not_calculated'][ind]
                     if remained_buy > 0:
-                        if remained_buy >= remained_sell:
+                        split_ratio=self.get_split_ratio(symbol,buy_ops_symbol['Tarih'][ind],sell_op['Tarih'])
+                        print(f"split ratio is {split_ratio}")
+                        if remained_buy*split_ratio >= remained_sell:
                             sell_count=remained_sell
-                            remained_buy = remained_buy - remained_sell
+                            remained_buy = remained_buy - remained_sell/split_ratio
                             remained_sell = 0
                         else:
-                            sell_count=remained_buy
-                            remained_sell = remained_sell - remained_buy
+                            sell_count=remained_buy*split_ratio
+                            remained_sell = remained_sell - remained_buy*split_ratio
                             remained_buy = 0
                         buy_ops_symbol.loc[ind, 'not_calculated'] = remained_buy
                         sell_op['Hesaplanan Adet']=sell_count
-                        sell_op['Ortalama Alis Fiyatı']=buy_ops_symbol['Ortalama İşlem Fiyatı'][ind]
+                        sell_op['Split Ratio']=split_ratio
+                        sell_op['Ortalama Alis Fiyatı']=buy_ops_symbol['Ortalama İşlem Fiyatı'][ind] / split_ratio
                         sell_op['Alış Tarihi UFE']=buy_ops_symbol['ops_time_ufe'][ind]
                         sell_op['Alış Tarihi Dolar']=buy_ops_symbol['Islem Tarihi Dolar'][ind]
                         print(sell_op)

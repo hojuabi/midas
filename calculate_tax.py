@@ -37,9 +37,7 @@ def get_indexed_ufe(satis_ufe,alis_ufe):
 
 
 def get_ufe(year, month):
-    print(ufe_df)
-    print(f"yil = {year}-{month}")
-    print(ufe_df[ufe_df['YIL'] == year])
+
     index = ufe_df[ufe_df['YIL'] == year].index[0]
     ufe = ufe_df.loc[index].values[int(month)]
     return ufe
@@ -54,6 +52,18 @@ def get_currency_per_op(previous_working_day):
         dollar = dollar_df.loc[index,'currency']
 
     return dollar
+
+def get_split_ratio(symbol, buy_date, sell_date ):
+    split_row = splits_df[splits_df['Symbol'] == symbol]
+    if not split_row.empty:
+        split = split_row.iloc[0].to_dict()
+        if split['Date'] > buy_date and split['Date'] < sell_date:
+            return split['Split Ratio']
+        else:
+            return 1
+    else :
+        return 1
+
 def get_dollar_history():
     excel_file = 'EVDS.xlsx'  # Replace 'example.xlsx' with the path to your Excel file
     df = pd.read_excel(excel_file)
@@ -63,6 +73,23 @@ def get_dollar_history():
 
     df = df[df['Tarih'].notna()]
     df = df.drop(df.columns[2],axis=1)
+
+    return df
+
+def get_splits_history():
+    split_file = 'split_2023.json'  # Replace 'example.xlsx' with the path to your Excel file
+    df = pd.read_json(split_file)
+    test_row = {
+        "Date" : "2023-12-01  00:00:00",
+        "Symbol" : "TMF",
+        "Company Name": "Test Company",
+        "Type" : "Reverse",
+        "Split Ratio" : 0.1
+    }
+    print(f"df length {len(df)}")
+    df.loc[len(df)] = test_row
+    df['Date']=pd.to_datetime(df['Date'],format='%Y-%m-%d %H:%M:%S')
+    df['Split Ratio'] = df['Split Ratio'].astype(float)
 
     return df
 
@@ -93,6 +120,8 @@ print(dollar_df)
 ufe_df = get_ufe_history()
 print(ufe_df)
 
+splits_df = get_splits_history()
+print(splits_df)
 
 pdf_files = glob.glob(directory + '/*.pdf')
 for pdf_file in pdf_files:
@@ -171,17 +200,21 @@ for symbol in sell_ops['Sembol'].unique():
         for ind in buy_ops_symbol.index:
             remained_buy=buy_ops_symbol['not_calculated'][ind]
             if remained_buy > 0:
-                if remained_buy >= remained_sell:
+                split_ratio=get_split_ratio(symbol,buy_ops_symbol['Tarih'][ind],sell_op['Tarih'])
+                print(f"split ratio is {split_ratio}")
+                
+                if remained_buy*split_ratio >= remained_sell:
                     sell_count=remained_sell
-                    remained_buy = remained_buy - remained_sell
+                    remained_buy = remained_buy - remained_sell/split_ratio
                     remained_sell = 0
                 else:
-                    sell_count=remained_buy
-                    remained_sell = remained_sell - remained_buy
+                    sell_count=remained_buy*split_ratio
+                    remained_sell = remained_sell - remained_buy*split_ratio
                     remained_buy = 0
                 buy_ops_symbol.loc[ind, 'not_calculated'] = remained_buy
                 sell_op['Hesaplanan Adet']=sell_count
-                sell_op['Ortalama Alis Fiyatı']=buy_ops_symbol['Ortalama İşlem Fiyatı'][ind]
+                sell_op['Split Ratio']=split_ratio
+                sell_op['Ortalama Alis Fiyatı']=buy_ops_symbol['Ortalama İşlem Fiyatı'][ind] / split_ratio
                 sell_op['Alış Tarihi UFE']=buy_ops_symbol['ops_time_ufe'][ind]
                 sell_op['Alış Tarihi Dolar']=buy_ops_symbol['Islem Tarihi Dolar'][ind]
                 print(sell_op)
