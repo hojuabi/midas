@@ -19,4 +19,12 @@ Asagidaki sayfadan extreleri pdf olarak yukleyip hesaplama yapabilirsiniz. sonuc
 
 ## Lokal calistirma
 
-Indirdikten sonra gerekli kutuphaneler pip ile kurulduktan sonra extreler(PDF) olarak ayni dizine kopyalanip **python3 calculate_tax.py** komutu ile claistirilabilir. Bunun sonucunda ayni klasorde bir excel dosyasi olusacaktir.
+- Java ve pip kurulmus olmasi gerekiyor.
+- Indirdikten sonra gerekli kutuphaneleri kurmak icin
+
+` pip install -r requirements.txt`
+
+- Sonra extreler(PDF)  ayni dizine kopyalanip asagidaki komut calistirilabilir. Bunun sonucunda ayni klasorde bir excel dosyasi olusacaktir.
+
+`python3 calculate_tax.py`
+
