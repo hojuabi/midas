@@ -1,6 +1,6 @@
 # Midas Vergi Hesaplama
 
-Bu uygulamanin kurumsal olarak Midas ile herhangi bir iliskisi yoktur.
+Bu uygulamanin kurumsal olarak Midas ile herhangi bir iliskisi yoktur. Midas vergi hesaplama sayfasindaki hesaplama yontemlerinin tamami dikkate alinarak hesaplamalar yapilmistir. 
 
 ## Web uzerinden hesaplama
 
