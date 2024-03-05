@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Upload Results</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vergi Hesaplama Sonuclari</title>
 </head>
 <body>
-    <h1>Upload Results</h1>
-    <ul>
-        {% for result in results %}
-            <li>{{ result }}</li>
-        {% endfor %}
-    </ul>
-</body>
+    <h1>Sonuclar</h1>
+
+    <p><a href="{{ url_for('download_excel') }}"> Detayli Excel dosyasini indir</a></p>
+    <p> Asagida beyannemeye girilebilecek sekilde ozeti gorebilirsiniz.</p>
+    <!-- Display DataFrame as HTML table -->
+    {{ html_table | safe }}
+
+    <!-- Link to download Excel file -->
+    </body>
 </html>
