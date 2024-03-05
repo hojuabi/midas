@@ -244,5 +244,7 @@ sell_ops_calculated['Vergiye Tabi Kazanc'] = sell_ops_calculated['Satis Toplam T
 
 print(sell_ops_calculated)
 
+print(sell_ops_calculated.groupby('Sembol')['Vergiye Tabi Kazanc'].sum())
+
 sell_ops_calculated.to_html("sonuc.html",index=False)
 sell_ops_calculated.to_excel("sonuc.xlsx",index=False)
