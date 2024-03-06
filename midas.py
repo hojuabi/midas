@@ -9,7 +9,7 @@ from io import BytesIO
 
 HEADERS = {'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'}
 
-
+islem_ucreti = 1.5
 
 class Midas:
     def __init__(self):
@@ -222,14 +222,16 @@ class Midas:
 
         print(sell_ops_calculated)
 
-        sell_ops_calculated['Alis Toplam TL'] = sell_ops_calculated['Hesaplanan Adet'] * \
-                                        sell_ops_calculated['Ortalama Alis Fiyatı'] *  \
-                                        sell_ops_calculated['Alış Tarihi Dolar']
+        sell_ops_calculated['Alis Toplam Dolar'] = (sell_ops_calculated['Hesaplanan Adet'] * \
+                                 sell_ops_calculated['Ortalama Alis Fiyatı']) - islem_ucreti
+                                 
+        sell_ops_calculated['Alis Toplam TL'] = sell_ops_calculated['Alis Toplam Dolar'] * sell_ops_calculated['Alış Tarihi Dolar']
         sell_ops_calculated['Ufe Endeksi'] = sell_ops_calculated.apply(lambda row: self.get_indexed_ufe(row['ops_time_ufe'], row['Alış Tarihi UFE']), axis=1)
         sell_ops_calculated['Alis Toplam Endeksli TL'] = sell_ops_calculated['Alis Toplam TL'] * sell_ops_calculated['Ufe Endeksi']
-        sell_ops_calculated['Satis Toplam TL'] = sell_ops_calculated['Hesaplanan Adet'] * \
-                                        sell_ops_calculated['Ortalama İşlem Fiyatı'] *  \
-                                        sell_ops_calculated['Islem Tarihi Dolar']
+        sell_ops_calculated['Satis Toplam Dolar'] = (sell_ops_calculated['Hesaplanan Adet'] * \
+                                        sell_ops_calculated['Ortalama İşlem Fiyatı']) - islem_ucreti
+        sell_ops_calculated['Satis Toplam TL'] = sell_ops_calculated['Satis Toplam Dolar'] *  sell_ops_calculated['Islem Tarihi Dolar']
+
 
         sell_ops_calculated['Vergiye Tabi Kazanc'] = sell_ops_calculated['Satis Toplam TL'] - sell_ops_calculated['Alis Toplam Endeksli TL']
 
