@@ -248,7 +248,6 @@ class Midas:
             excel_buffer = BytesIO()
             self.ops.to_excel(excel_buffer,index=False)
             summary=self.ops.groupby('Sembol')['Vergiye Tabi Kazanc'].sum()
-            print(f"Summary equal to {summary}")
             summary_df = summary.to_frame()
             print(f"dataframe for summary {summary_df}")
             return self.ops, summary_df, excel_buffer
